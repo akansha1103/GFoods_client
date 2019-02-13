@@ -112,6 +112,12 @@ public class Internal_Menu extends AppCompatActivity {
             lv.setAdapter(new CustomAdapter1(this, prgmNameList,prgmImages));
 
         }
+        else if(name.equals("Extras"))
+        {
+            ArrayList<String> arrayList = ArrayListComman.getInstance().getListName();
+            lv.setClickable(true);
+            lv.setAdapter(new CustomAdapter2(this,arrayList));
+        }
 
     }
 }

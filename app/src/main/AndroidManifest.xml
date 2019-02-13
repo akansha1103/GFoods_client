@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manika.user.gfoods_manika1">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -16,15 +19,26 @@
             android:name=".Main_Menu"
             android:label="@string/title_activity_main__menu"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".Details_Food" />
+        <activity android:name=".Place_order_cart" />
+        <activity android:name=".History" />
+        <activity android:name=".Details_Food2" />
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_0Q9QUVz0kaWmK3" />
+
+        <activity android:name=".Signin" />
+        <activity android:name=".Signup" />
+        <activity android:name=".Splash_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Details_Food" />
-        <activity android:name=".Place_order_cart" />
-        <activity android:name=".History"></activity>
     </application>
 
 </manifest>

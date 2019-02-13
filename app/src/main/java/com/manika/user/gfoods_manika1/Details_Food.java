@@ -93,7 +93,7 @@ ArrayList<String> arr=ArrayListComman.getInstance().getList();
 
         }
 
-        else  if(food.equals("Tea(Tea Bag)"))
+        else  if(food.equals("Tea(Tea bag)"))
         {
             img.setImageResource(R.drawable.tea_bag);
             //name.setText("Cold Coffee");
@@ -357,7 +357,7 @@ ArrayList<String> arr=ArrayListComman.getInstance().getList();
                         arr.add(name1.getText().toString() + "\n" + quantity.getNumber().toString() + "\n20");
                         Toast.makeText(Details_Food.this, "Product Added To Cart", Toast.LENGTH_SHORT).show();
 
-                    } else if (name1.getText().toString().equals("Aloo Parantha")) {
+                    } else if (name1.getText().toString().equals("Aloo Pyaz Parantha")) {
 
                         arr.add(name1.getText().toString() + "\n" + quantity.getNumber().toString() + "\n30");
                         Toast.makeText(Details_Food.this, "Product Added To Cart", Toast.LENGTH_SHORT).show();
@@ -387,7 +387,7 @@ ArrayList<String> arr=ArrayListComman.getInstance().getList();
                         arr.add(name1.getText().toString() + "\n" + quantity.getNumber().toString() + "\n30");
                         Toast.makeText(Details_Food.this, "Product Added To Cart", Toast.LENGTH_SHORT).show();
 
-                    } else if (name1.getText().toString().equals("Jeera Maggi")) {
+                    } else if (name1.getText().toString().equals("Jerra Maggi")) {
 
                         arr.add(name1.getText().toString() + "\n" + quantity.getNumber().toString() + "\n35");
                         Toast.makeText(Details_Food.this, "Product Added To Cart", Toast.LENGTH_SHORT).show();

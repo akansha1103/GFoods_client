@@ -1,13 +1,21 @@
 package com.manika.user.gfoods_manika1;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +35,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Place_order_cart extends AppCompatActivity {
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
+
+import org.json.JSONObject;
+
+public class Place_order_cart extends AppCompatActivity implements PaymentResultListener  {
 
     TextView place;
     ListView lv;
     ArrayList<String> a1 = ArrayListComman.getInstance().getList();
     String array[];
+    ArrayAdapter<String> onj;
     String itemname;
     int qty = 0, price = 0;
     int total = 0;
@@ -40,6 +54,7 @@ public class Place_order_cart extends AppCompatActivity {
     String date2 = "", items2 = "";
     String items_qty="";
     int total_final;
+    int pos;
     String total_P;
 
     String url = "https://manika2mani.000webhostapp.com/setdata.php";
@@ -60,8 +75,16 @@ public class Place_order_cart extends AppCompatActivity {
         }
 
         Toast.makeText(this, "size is " + a1.size(), Toast.LENGTH_SHORT).show();
-        ArrayAdapter<String> onj = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, a1);
+        onj = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, a1);
         lv.setAdapter(onj);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pos=position;
+                registerForContextMenu(lv);
+            }
+        });
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyy");
@@ -87,25 +110,119 @@ public class Place_order_cart extends AppCompatActivity {
         place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(a1.size()!=0) {
-                    new DataProcess().execute();
 
-                }DatabaseOperations db = new DatabaseOperations(cxt);
-                db.putInformation(db, ArrayListComman.getInstance().getName(), ArrayListComman.getInstance().getContact(), items2, qty2, price2, String.valueOf(total), date2);
-                qty = 0;
-                price = 0;
-                total = 0;
-                qty2 = "";
-                price2 = "";
-                date2 = "";
-                items2 = "";
-              //  a1.clear();
-                Toast.makeText(cxt, "Ordered Placed Only Pay is left   "+items_qty+"   "+total_P, Toast.LENGTH_SHORT).show();
+                startPayment();
+
             }
         });
 
 
     }
+    public void startPayment() {
+        /**
+         * You need to pass current activity in order to let Razorpay create CheckoutActivity
+         */
+        final Activity activity = this;
+
+        final Checkout co = new Checkout();
+
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", "Razorpay Corp");
+            options.put("description", "Payable Amount");
+            //You can omit the image option to fetch the image from dashboard
+            //options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+            options.put("currency", "INR");
+
+            String payment = total_P;
+
+            double total = Double.parseDouble(payment);
+            total = total * 100;
+            options.put("amount", total);
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", "aryavrat97@gmail.com");
+            preFill.put("contact", "7417155939");
+
+            options.put("prefill", preFill);
+
+            co.open(activity, options);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID) {
+        Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+        if(a1.size()!=0) {
+            new DataProcess().execute();
+
+        }DatabaseOperations db = new DatabaseOperations(cxt);
+        db.putInformation(db, ArrayListComman.getInstance().getName(), ArrayListComman.getInstance().getContact(), items2, qty2, price2, String.valueOf(total), date2);
+        qty = 0;
+        price = 0;
+        total = 0;
+        qty2 = "";
+        price2 = "";
+        date2 = "";
+        items2 = "";
+        a1.clear();
+        //Toast.makeText(cxt, "Ordered Placed Only Pay is left   "+items_qty+"   "+total_P, Toast.LENGTH_SHORT).show();
+        //  a1.clear();
+        onj.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPaymentError(int code, String response) {
+        try {
+            Toast.makeText(this, "Payment error please try again", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("OnPaymentError", "Exception in onPaymentError", e);
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add("Delete");
+      //  menu.add("Rename");
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        String title=item.getTitle().toString();
+        if(title.equals("Delete"))
+        {
+            a1.remove(lv.getItemAtPosition(pos).toString());
+            Toast.makeText(Place_order_cart.this, "Item Removed", Toast.LENGTH_LONG).show();
+            onj.notifyDataSetChanged();
+        }
+       /* else {
+
+            final Dialog d=new Dialog(MainActivity.this);
+            d.setContentView(R.layout.custom_dialog);
+            d.show();
+            final EditText e2=d.findViewById(R.id.edit1);
+            Button b2=d.findViewById(R.id.button2);
+            b2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data =e2.getText().toString();
+                    a1.set(pos,data);
+                    onj.notifyDataSetChanged();
+                    d.dismiss();
+                    Toast.makeText(MainActivity.this, "Item Renamed", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+
+        }*/
+        return super.onContextItemSelected(item);
+    }
+
 
 
     class DataProcess extends AsyncTask<String, String, String> {
@@ -124,8 +241,8 @@ public class Place_order_cart extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("name", "Manika Agrawal"));
-            params.add(new BasicNameValuePair("contact", "9557054160"));
+            params.add(new BasicNameValuePair("name", "XYZ"));
+            params.add(new BasicNameValuePair("contact", ArrayListComman.getInstance().getContact()));
             params.add(new BasicNameValuePair("items_qty", items_qty));
             params.add(new BasicNameValuePair("price", total_P));
          //   params.add(new BasicNameValuePair("status","0"));

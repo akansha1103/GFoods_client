@@ -34,14 +34,15 @@ public class History extends AppCompatActivity {
             total=cr.getString(5);
             date=cr.getString(6);
 
-
-            //  String phone=cr.getString(1);
-            // Toast.makeText(cxt, ""+name, Toast.LENGTH_SHORT).show();
-            a1.add("NAME-- "+name+"\nCONTACT-- "+contact+"\nITEMS-- "+items.substring(1)+"\nQUANTITY-- "+qty.substring(1)+"\nPRICES PER-- "+price.substring(1)+"\nTOTAL AMT-- "+total+"\nDATE-- "+date.substring(1,12)+"\n\n");
-        }while(cr.moveToNext());
+if(contact.equals("9557054160")) {
+    //  String phone=cr.getString(1);
+    // Toast.makeText(cxt, ""+name, Toast.LENGTH_SHORT).show();
+    a1.add("NAME-- " + name + "\nCONTACT-- " + contact + "\nITEMS-- " + items.substring(1) + "\nQUANTITY-- " + qty.substring(1) + "\nPRICES PER-- " + price.substring(1) + "\nTOTAL AMT-- " + total + "\nDATE-- " + date.substring(1, 12) + "\n\n");
+}      }while(cr.moveToNext());
 
         ArrayAdapter<String> onj=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,a1);
         lv.setAdapter(onj);
+
 
     }
 }

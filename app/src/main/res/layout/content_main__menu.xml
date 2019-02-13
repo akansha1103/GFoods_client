@@ -9,14 +9,26 @@
     tools:showIn="@layout/app_bar_main__menu">
 
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler_food"
-        android:focusable="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recycler_food"
+                android:focusable="false"/>
+
+
+
+        </RelativeLayout>
+
+
+   <!--
 
     </ListView>
-
+-->
 
     <!--   <android.support.v7.widget.Toolbar
            android:layout_width="match_parent"

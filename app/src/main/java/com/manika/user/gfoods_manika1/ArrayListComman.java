@@ -11,13 +11,18 @@ public class ArrayListComman {
 
         private static ArrayListComman obj1;
         private ArrayList<String> arr;
+        private ArrayList<String> price;
+        private ArrayList<String> namef;
         private String user;
+
         private String contact;
         //private ArrayListCommon obj1;
 
         private ArrayListComman()
         {
             arr=new ArrayList<String>();
+            price=new ArrayList<String>();
+            namef=new ArrayList<String>();
             user="";
             contact="";
 
@@ -31,6 +36,22 @@ public class ArrayListComman {
             }
             return  obj1;
         }
+        public void setListPrice(ArrayList<String> a)
+        {
+            this.price = a;
+        }
+        public ArrayList<String> getListprice()
+        {
+            return this.price;
+        }
+    public void setListName(ArrayList<String> a1)
+    {
+        this.namef = a1;
+    }
+    public ArrayList<String> getListName()
+    {
+        return this.namef;
+    }
         public ArrayList<String> getList(){
             return this.arr;
         }
